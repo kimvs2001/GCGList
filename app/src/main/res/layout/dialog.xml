@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:id="@+id/dialog_table"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="TAG :"
+
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/tag"
+                android:hint="Input tag"
+                android:inputType="text"
+
+                android:layout_height="match_parent"
+                />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+
+                android:text="IP :"
+
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/ip"
+                android:hint="Input host address"
+                android:inputType="text"
+
+
+                android:layout_height="match_parent"
+
+                />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="Port :"
+
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+
+                />
+
+            <EditText
+                android:id="@+id/port"
+                android:hint="Input ssh port"
+                android:inputType="text"
+
+                android:layout_height="match_parent"
+
+                />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="ID :"
+
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+
+                />
+
+            <EditText
+                android:id="@+id/userName"
+                android:hint="Input user name"
+                android:inputType="text"
+
+                android:layout_height="match_parent"
+                />
+
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="Password : "
+
+
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/password"
+                android:hint="Input password"
+                android:inputType="textPassword"
+
+                android:layout_height="match_parent"
+
+
+                />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="Keyword : "
+
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+
+                />
+
+            <EditText
+                android:id="@+id/keyword"
+                android:hint="Input password"
+                android:inputType="text"
+                android:scrollHorizontally="false"
+                android:ems="8"
+
+
+                android:layout_height="match_parent"
+
+
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+
+
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+
+            >
+
+            <TextView
+                android:text="Result : "
+                android:id="@+id/retValView"
+
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+
+                />
+            <HorizontalScrollView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+
+                >
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/retVal"
+                android:gravity="start"
+                android:text=""
+                android:scrollHorizontally="true"
+                android:scrollbars="vertical"
+                android:ems="8"
+
+                android:layout_height="match_parent"
+
+                />
+            </HorizontalScrollView>
+
+        </TableRow>
+
+
+        <!--
+        <TableRow android:gravity="center_horizontal">
+
+
+            <Button
+                android:id="@+id/button_delete_user_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:text="삭제"
+                android:textAllCaps="false"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/button_cancel_user_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:text="취소"
+                android:textAllCaps="false"
+                android:textSize="20dp" />
+
+
+            <Button
+                android:id="@+id/button_save_user_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:text="저장"
+                android:textAllCaps="false"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/button_modify_user_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:text="수정"
+                android:textAllCaps="false"
+                android:textSize="20dp" />
+
+
+        </TableRow>
+-->
+    </TableLayout>
+
+
+    <Button
+        android:id="@+id/button_delete_user_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="삭제"
+        android:textAllCaps="false"
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/dialog_table"
+
+        app:layout_constraintEnd_toStartOf="@id/button_cancel_user_data"
+        android:theme="@style/deleteTheme"
+        />
+
+    <Button
+        android:id="@+id/button_cancel_user_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="취소"
+        android:textAllCaps="false"
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/dialog_table"
+
+        app:layout_constraintEnd_toStartOf="@id/button_save_user_data"
+        android:theme="@style/cancleTheme"
+        />
+
+
+    <Button
+        android:id="@+id/button_save_user_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="저장"
+        android:textAllCaps="false"
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/dialog_table"
+
+        app:layout_constraintEnd_toStartOf="@id/button_modify_user_data"
+        android:theme="@style/saveTheme"
+        />
+
+    <Button
+        android:id="@+id/button_modify_user_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="수정"
+        android:textAllCaps="false"
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/dialog_table"
+
+
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="10dp"
+        android:theme="@style/modifyTheme"
+        />
+
+</android.support.constraint.ConstraintLayout>
+

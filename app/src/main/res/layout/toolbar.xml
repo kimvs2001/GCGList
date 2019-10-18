@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/white"
+    app:layout_collapseMode="pin"
+    app:layout_scrollFlags="scroll|enterAlways"
+
+    android:theme="@style/ToolbarTheme"
+
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- This is a centered logo -->
+        <!--
+        <ImageView
+            android:id="@+id/toolbar_logo"
+            android:src="@drawable/ic_outline_add_black_24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="?attr/actionBarSize"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center" />
+             -->
+        <TextView
+            android:id="@+id/zemock"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="start"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="?attr/actionBarSize"
+            android:layout_marginRight="?attr/actionBarSize"
+            android:layout_marginBottom="4dp"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="#FC090808"
+            android:textSize="20sp"
+            app:autoSizeMaxTextSize="40dp"
+            app:autoSizeMinTextSize="10dp" />
+        <!--
+        <ImageButton
+            android:id="@+id/toolbar_logo"
+            android:src="@drawable/green"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="end"
+            style="@style/Widget.AppCompat.ImageButton"
+             />
+        -->
+
+    </FrameLayout>
+</android.support.v7.widget.Toolbar>

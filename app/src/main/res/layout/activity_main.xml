@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:expanded="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/toolbar" />
+
+    </android.support.design.widget.AppBarLayout>
+    <FrameLayout
+        android:id="@+id/lvcontainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/contentContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" >
+
+    <ListView
+        android:id="@+id/listview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/contentContainer"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@color/lightGreen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lvcontainer">
+
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:visibility="invisible"
+            app:bb_tabXmlResource="@xml/bbts"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </FrameLayout>
+
+
+    <!--
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="8dp"
+        app:backgroundTint="#7500DDFF"
+        app:layout_constraintBottom_toBottomOf="@+id/contentContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_input_add" />
+    -->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:backgroundTint="@color/lightGreen"
+        app:layout_constraintBottom_toTopOf="@+id/contentContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/outline_send_black_24dp"
+        android:theme="@style/sendTheme"
+        />
+
+
+</android.support.constraint.ConstraintLayout>
+
+    <!--
+    <?xml version="1.0" encoding="utf-8"?>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:expanded="true">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/background_light"
+                android:minHeight="20dp"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleTextColor="#083C80" />
+
+        </android.support.design.widget.AppBarLayout>
+
+       <include layout="@layout/content_main" />
+
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="@dimen/fab_margin"
+            app:backgroundTint="#7500DDFF"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:backgroundTint="#BCEF6C00"
+            app:srcCompat="@android:drawable/ic_dialog_email" />
+
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigationBar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+
+            android:layout_alignParentBottom="false"
+
+            android:layout_gravity="bottom"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:expanded="true"
+            app:itemBackground="@color/colorPrimary"
+
+
+            />
+
+
+
+        <include layout="@layout/content_main" />
+    </android.support.design.widget.CoordinatorLayout>
+    -->

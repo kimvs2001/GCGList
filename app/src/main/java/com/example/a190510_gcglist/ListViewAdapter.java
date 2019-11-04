@@ -109,7 +109,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(String _arrnum,String tag,String id, String ip,String pw,String port, String state,String retVal,String keyword) {
+    public void addItem(String _arrnum,String tag,String id, String ip,String pw,String port, String state,String retVal,String keyword,String backGroundInterval,String backGroundOnOff) {
         ListViewItem item = new ListViewItem();
         item.setArrnum(_arrnum );
         item.setArrnum(tag);
@@ -120,6 +120,11 @@ public class ListViewAdapter extends BaseAdapter {
         item.setPort(port );
         item.setRetVal(retVal);
         item.setKeyword(keyword);
+        item.setKeyword(backGroundInterval);
+        if(backGroundOnOff.equals(("t"))) {
+            item.setbackGroundOnOff(backGroundOnOff);
+        }
+        item.setbackGroundOnOff("f");
 
         map.put(getCount(),item);
         listViewItemList.add(item);

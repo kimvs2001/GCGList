@@ -3,9 +3,9 @@
     package="com.example.a190510_gcglist"
     android:versionCode="2"
     android:versionName="1.1.2">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
 
     <application
         android:allowBackup="true"
@@ -14,45 +14,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
-
-
-
-
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver
-            android:name="com.example.a190510_gcglist.BootReceiver"
-            android:enabled="true"
-            android:exported="false"
-            android:label="BOOTReceiver">
-            <intent-filter >
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-
-
-        <!-- BackgroundService -->
-        <service
-            android:name="com.example.a190510_gcglist.BackgroundService"
-            android:enabled="true"
-            android:stopWithTask="false">
-        </service>
-
-
     </application>
-
-
-
-
 
 </manifest>

@@ -15,6 +15,16 @@
 
         />
 
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_outline_settings_applications_black_24dp"
+        android:title="@string/menu_search"
+        app:showAsAction="ifRoom"
+
+
+        android:clickable="true"
+        android:focusable="true"/>
+
 
 
 

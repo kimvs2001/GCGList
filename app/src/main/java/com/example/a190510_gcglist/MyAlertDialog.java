@@ -18,24 +18,26 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
 public class MyAlertDialog extends DialogFragment  {//implements View.OnClickListener{//Button.OnClickListener{
 
 
-    static AlertDialog m_alertDialog;
-    static DBHelper m_dbHelper;
-    static ListViewAdapter m_adapter;
-    static ArrayList<String> m_arrList;
-    static MyListView m_mlv;
+//    static AlertDialog m_alertDialog;
+//    static DBHelper m_dbHelper;
+//    static ListViewAdapter m_adapter;
+//    static ArrayList<String> m_arrList;
+//    static MyListView m_mlv;
 //    static CONTROLS m_controls;
-    AlertDialog.Builder m_builder;
+//    AlertDialog.Builder m_builder;
 
-    View popupInputDialogView = null;
+//    View popupInputDialogView = null;
 
 
     EditText tagEditText = null;
@@ -50,8 +52,8 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
     Button cancelDataButton = null;
     Button modifyDataButton = null;
     Button deleteDataButton = null;
-
-
+    ToggleButton bgExeButton = null;
+    EditText intervalEditText = null;
 
 
 
@@ -65,10 +67,13 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
     String tmp_keyword;//= m_arrList.get(DATA.COLNUM * position + DATA.KEYWORD);
     String tmp_retVal;//= m_arrList.get(DATA.COLNUM * position + DATA.RETVALUE);
 
+
+
     public interface MyAlertDialogListner{
-        void onFinishDialogDoAdd(String _tag,String _userName,String _password,String _ip,String _port,String _keyword);
+        void onFinishDialogDoAdd(String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _backGroundOnOff);
         void onFinishDialogDoDelete(int _position);
-        void onFinishDialogDoModify(int _position,String _tag,String _userName,String _password,String _ip,String _port,String _keyword);
+        void onFinishDialogDoModify(int _position,String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _state,String backGroundInterval,String _backGroundOnOff);
+        void exeBackground();
     }
 
     public MyAlertDialog(){
@@ -76,12 +81,13 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
         //Empty constructor
     }
 
-    public static MyAlertDialog newInstance(int _position,DBHelper _dbHelper, ListViewAdapter _adapter, MyListView _mlv,ArrayList<String> _arrList,int _type,String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _returnValue){
+//    public static MyAlertDialog newInstance(int _position,DBHelper _dbHelper, ListViewAdapter _adapter, MyListView _mlv,ArrayList<String> _arrList,int _type,String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _returnValue){
+public static MyAlertDialog newInstance(int _position,int _type,String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _returnValue,String _backGroundInterval,String _backGroundOnOff){
 
-        m_adapter = _adapter;
-        m_dbHelper = _dbHelper;
-        m_mlv = _mlv;
-        m_arrList = _arrList;
+//        m_adapter = _adapter;
+//        m_dbHelper = _dbHelper;
+//        m_mlv = _mlv;
+//        m_arrList = _arrList;
 //        m_controls = _controls;
 
         MyAlertDialog fragment = new MyAlertDialog();
@@ -95,6 +101,8 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
         args.putString("port",_port);
         args.putString("keyword",_keyword);
         args.putString("returnValue",_returnValue);
+        args.putString("backGroundInterval",_backGroundInterval);
+        args.putString("backGroundOnOff",_backGroundOnOff);
 
 
 
@@ -133,8 +141,8 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
         cancelDataButton = view.findViewById(R.id.button_cancel_user_data);
         modifyDataButton = view.findViewById(R.id.button_modify_user_data);
         deleteDataButton = view.findViewById(R.id.button_delete_user_data);
-
-
+        bgExeButton = view.findViewById(R.id.button_backGround_Exe_toggle);
+        intervalEditText = view.findViewById(R.id.backGroundInterval);
 
         switch (getArguments().getInt("type")){
             case 1:  //DIALOG_TYPE_ADD
@@ -150,7 +158,9 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
                         getArguments().getString("ip"),
                         getArguments().getString("port"),
                         getArguments().getString("keyword"),
-                        getArguments().getString("returnValue")
+                        getArguments().getString("returnValue"),
+                        getArguments().getString("backGroundInterval"),
+                        getArguments().getString("backGroundOnOff")
                 );
                 break;
         }
@@ -230,6 +240,13 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
         modifyDataButton.setVisibility(View.GONE);
         deleteDataButton.setVisibility(View.GONE);
 
+//
+//        bgExeButton.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View view){
+//                MyAlertDialogListner listnerInMainActivity = (MyAlertDialogListner)getActivity();
+//                listnerInMainActivity.exeBackground();
+//            }
+//        });
 
         cancelDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,6 +265,8 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
                 String ip = ipEditText.getText().toString();
                 String port = portEditText.getText().toString();
                 String keyword = keywordEditText.getText().toString();
+                String backGroundOnOff = bgExeButton.isChecked() ? "t" : "f";
+
 
 //                long cnt = m_dbHelper.insert(tag,userName,ip,port,password,keyword);
 //                if(cnt < 0){
@@ -271,7 +290,7 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
 
 
                 MyAlertDialogListner listnerInMainActivity = (MyAlertDialogListner)getActivity();
-                listnerInMainActivity.onFinishDialogDoAdd(tag,userName,password,ip,port,keyword);
+                listnerInMainActivity.onFinishDialogDoAdd(tag, userName, password, ip, port, keyword,backGroundOnOff);
                 dismiss();
 
 
@@ -286,7 +305,7 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
     }
 
 //    protected void onPrepareShowDialog(int id, Dialog dialog, String host_tag, String host_id, String host_ip, String host_pw, String host_port, String keyword, String tmp_retVal, ArrayList<String> _arrList) {
-    void onPrepareShowDialog(int _position,String host_tag, String host_id, String host_ip, String host_pw, String host_port, String keyword, String tmp_retVal){//, ArrayList<String> _arrList,MainActivity _mainActivity) {
+    void onPrepareShowDialog(int _position,String host_tag, String host_id, String host_ip, String host_pw, String host_port, String keyword, String tmp_retVal,String _backGroundInterval,String _backGroundOnOff){//, ArrayList<String> _arrList,MainActivity _mainActivity) {
 
 //        m_arrList = _arrList;
 //        super.onPrepareDialog(id, dialog);
@@ -310,6 +329,9 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
         saveDataButton.setVisibility(View.GONE);
 
 
+        boolean bgExeButtonSetValue = _backGroundOnOff.equals("t") ;
+        bgExeButton.setChecked(bgExeButtonSetValue);
+
         deleteDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -328,9 +350,11 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
                 String ip = ipEditText.getText().toString();
                 String port = portEditText.getText().toString();
                 String keyword = keywordEditText.getText().toString();
+                String backGroundInterval="0";// = keywordEditText.getText().toString();
+                String backGroundOnOff = bgExeButton.isChecked() ? "t" : "f";
 
                 MyAlertDialogListner listnerInMainActivity = (MyAlertDialogListner)getActivity();
-                listnerInMainActivity.onFinishDialogDoModify(position,tag,userName,password,ip,port,keyword);
+                listnerInMainActivity.onFinishDialogDoModify(position,tag,userName,password,ip,port,keyword,"NONE",backGroundInterval,backGroundOnOff);
                 dismiss();
             }
         });
@@ -338,6 +362,12 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
             @Override
             public void onClick(View view) {
                 dismiss();
+            }
+        });
+        bgExeButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                MyAlertDialogListner listnerInMainActivity = (MyAlertDialogListner)getActivity();
+                listnerInMainActivity.exeBackground();
             }
         });
 
@@ -348,9 +378,6 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
 //        m_alertDialog.show();
 //    }
 
-    public Dialog getDialog() {
-        return m_alertDialog;
-    }
 
 //
 //    public void onClick(View view) {

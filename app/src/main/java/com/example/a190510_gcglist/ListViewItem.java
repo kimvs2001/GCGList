@@ -15,6 +15,7 @@ public class ListViewItem {
     private String _arrnum;
     private String retVal;
     private String keywordStr;
+    private String backGroundOnOff;
     private ImageView imageView_state;
 
 
@@ -39,6 +40,7 @@ public class ListViewItem {
     public void setKeyword(String keyword) {
         keywordStr = keyword ;
     }
+    public void setbackGroundOnOff(String _backGroundOnOff){backGroundOnOff=_backGroundOnOff;}
     public Drawable getIcon() {
         return this.iconDrawable ;
     }
@@ -55,4 +57,5 @@ public class ListViewItem {
     public String getPort() {
         return this.portStr;
     }
+    public String getBackGroundOnOff(){return this.backGroundOnOff;}
 }

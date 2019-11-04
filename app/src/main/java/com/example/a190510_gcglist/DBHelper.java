@@ -36,7 +36,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 +"pw TEXT,"
                 +"state TEXT,"
                 +"retVal TEXT,"
-                +"keyword TEXT)";
+                +"keyword TEXT,"
+                +"backGroundInterval TEXT,"
+                +"backGroundOnOff TEXT)"
+                ;
         m_db.execSQL(table);
 
     }
@@ -44,17 +47,19 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+ DBTABLENAME ) ;
         onCreate(db);
     }
-    public long insert(String tag,String id,String ip, String port,String pw,String keyword){
+    public long insert(String _tag,String _id,String _ip, String _port,String _pw,String _keyword,String _backGroundOnOff){
         m_db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("tag",tag);
-        values.put("id",id);
-        values.put("ip",ip);
-        values.put("pw",pw);
+        values.put("tag",_tag);
+        values.put("id",_id);
+        values.put("ip",_ip);
+        values.put("pw",_pw);
         //if(port.length()<1) values.put("port","22");
-        values.put("port",port);
+        values.put("port",_port);
         values.put("state","NONE");
-        values.put("keyword",keyword);
+        values.put("keyword",_keyword);
+        values.put("backGroundInterval","0");
+        values.put("backGroundOnOff",_backGroundOnOff);
 
         long res = m_db.insert(DBTABLENAME,null,values  );
         m_db.close();
@@ -65,7 +70,20 @@ public class DBHelper extends SQLiteOpenHelper {
         m_db.execSQL("DELETE FROM "+DBTABLENAME+" WHERE _arrnum=" + position + ";");
         m_db.close();
     }
-    public int update(int position,String tag,String id,String ip, String port,String pw,String keyword) {
+    public int updateState(int position,String _state){
+        m_db =getWritableDatabase();
+        m_db.execSQL("UPDATE " + DBTABLENAME + " SET state='" + _state + "'" + " WHERE _arrnum=" + position + ";");
+
+        if(select(position,0)==position){
+            m_db.close();
+            return position;
+        }
+        else{
+            m_db.close();
+            return -1;
+        }
+    }
+    public int update(int position,String tag,String id,String ip, String port,String pw,String keyword,String _state,String _retVal,String _backGroundInterval,String _backGroundOnOff) {
 
         m_db =getWritableDatabase();
 
@@ -74,6 +92,10 @@ public class DBHelper extends SQLiteOpenHelper {
         m_db.execSQL("UPDATE " + DBTABLENAME + " SET ip='" + ip + "'" + " WHERE _arrnum=" + position + ";");
         m_db.execSQL("UPDATE " + DBTABLENAME + " SET port='" + port + "'" + " WHERE _arrnum=" + position + ";");
         m_db.execSQL("UPDATE " + DBTABLENAME + " SET pw='" + pw + "'" + " WHERE _arrnum=" + position + ";");
+        m_db.execSQL("UPDATE " + DBTABLENAME + " SET state='" + _state + "'" + " WHERE _arrnum=" + position + ";");
+        m_db.execSQL("UPDATE " + DBTABLENAME + " SET retVal='" + _retVal + "'" + " WHERE _arrnum=" + position + ";");
+        m_db.execSQL("UPDATE " + DBTABLENAME + " SET backGroundInterval='" + _backGroundInterval + "'" + " WHERE _arrnum=" + position + ";");
+        m_db.execSQL("UPDATE " + DBTABLENAME + " SET backGroundOnOff='" + _backGroundOnOff + "'" + " WHERE _arrnum=" + position + ";");
         //ContentValues values = new ContentValues();
         //values.put("keyword",keyword);
        // m_db.update(DBTABLENAME,values,"keyword=?",new String[]{keyword});
@@ -148,15 +170,17 @@ public class DBHelper extends SQLiteOpenHelper {
             lists = new ArrayList<>();
             if (cursor.moveToFirst()) {
                 do {
-                    lists.add(Integer.toString(cursor.getInt(cursor.getColumnIndex("_arrnum"))));
-                    lists.add(cursor.getString(cursor.getColumnIndex("tag")));
-                    lists.add(cursor.getString(cursor.getColumnIndex("id")));
-                    lists.add(cursor.getString(cursor.getColumnIndex("ip")));
-                    lists.add(cursor.getString(cursor.getColumnIndex("pw")));
-                    lists.add(cursor.getString(cursor.getColumnIndex("port")));
-                    lists.add(cursor.getString(cursor.getColumnIndex("state")));
-                    lists.add("EMPTY VALUE"); //retValue
-                    lists.add(cursor.getString(cursor.getColumnIndex("keyword")));
+                    lists.add(Integer.toString(cursor.getInt(cursor.getColumnIndex("_arrnum"))));//0
+                    lists.add(cursor.getString(cursor.getColumnIndex("tag")));//1
+                    lists.add(cursor.getString(cursor.getColumnIndex("id")));//2
+                    lists.add(cursor.getString(cursor.getColumnIndex("ip")));//3
+                    lists.add(cursor.getString(cursor.getColumnIndex("pw")));//4
+                    lists.add(cursor.getString(cursor.getColumnIndex("port")));//5
+                    lists.add(cursor.getString(cursor.getColumnIndex("state")));//6
+                    lists.add("EMPTY VALUE"); //retValue 7
+                    lists.add(cursor.getString(cursor.getColumnIndex("keyword")));// 8
+                    lists.add("0");//backGroundInterval 9
+                    lists.add(cursor.getString(cursor.getColumnIndex("backGroundOnOff")));// 10
                 } while (cursor.moveToNext());
             }
             cursor.close();

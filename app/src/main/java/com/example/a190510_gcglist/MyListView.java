@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -18,7 +21,7 @@ import java.util.ArrayList;
 
 
 
-public class MyListView  {//extends Fragment {
+public class MyListView {//extends Fragment {
 
     ListViewAdapter m_adapter;
     ListView m_listview;
@@ -29,6 +32,8 @@ public class MyListView  {//extends Fragment {
     Context m_context;
     //initOnItemClickListener m_initOnItemClickListener;
     MainActivity m_mainActivity;
+
+
 //    CONTROLS m_controls;
      MyListView(ListView _listview, ListViewAdapter _adapter, DBHelper _dbHelper,  Context m_context, ArrayList<String> _arrList, MainActivity _mainActivity)  {
         m_adapter = _adapter;
@@ -41,14 +46,13 @@ public class MyListView  {//extends Fragment {
         init();
 
     }
-
-
-
     public interface MyListViewListner{
-        void onTouchListView(int _position,String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _returnValue);
+         void onTouchListView(int _position,String _tag,String _username
+                                ,String _password,String _id,String  _port
+                                ,String _keyword, String _returnValue
+                                ,String _backGroundInterval,String _backGroundOnOff
+                                );
     }
-
-
 
 
     private void init() {
@@ -74,11 +78,13 @@ public class MyListView  {//extends Fragment {
                 String tmp_port = m_arrList.get(DATA.COLNUM * position + DATA.PORT);
                 String tmp_keyword = m_arrList.get(DATA.COLNUM * position + DATA.KEYWORD);
                 String tmp_retVal = m_arrList.get(DATA.COLNUM * position + DATA.RETVALUE);
+                String tmp_backGroundInterval = m_arrList.get(DATA.COLNUM * position + DATA.BACKGROUND_INTERVAL);
+                String tmp_backGroundOnOff = m_arrList.get(DATA.COLNUM * position + DATA.BACKGROUND_ONFF);
 //                m_mainActivity.showDialog();
 
 
                 MyListViewListner listnerInMainActivity = (MyListViewListner)m_mainActivity;
-                listnerInMainActivity.onTouchListView(position,tmp_tag,tmp_id,tmp_pw,tmp_ip,tmp_port,tmp_keyword,tmp_retVal);
+                listnerInMainActivity.onTouchListView(position,tmp_tag,tmp_id,tmp_pw,tmp_ip,tmp_port,tmp_keyword,tmp_retVal,tmp_backGroundInterval,tmp_backGroundOnOff);
 
 
 
@@ -101,7 +107,9 @@ public class MyListView  {//extends Fragment {
             String state = (String) m_arrList.get(DATA.COLNUM * i + DATA.STATE);
             String retVal = (String) m_arrList.get(DATA.COLNUM * i + DATA.RETVALUE);
             String keyword = (String) m_arrList.get(DATA.COLNUM * i + DATA.KEYWORD);
-            m_adapter.addItem(_arrnum, tag, id, ip, pw, port, state, retVal, keyword);
+            String backGroundInterval = (String) m_arrList.get(DATA.COLNUM * i + DATA.BACKGROUND_INTERVAL);
+            String backGroundOnOff = (String) m_arrList.get(DATA.COLNUM * i + DATA.BACKGROUND_ONFF);
+            m_adapter.addItem(_arrnum, tag, id, ip, pw, port, state, retVal, keyword,backGroundInterval,backGroundOnOff);
         }
     }
 //    private class initOnItemClickListener implements AdapterView.OnItemClickListener
@@ -213,7 +221,26 @@ public class MyListView  {//extends Fragment {
 //        return this.onOptionsItemSelected(item);
 //    }
 
+    public void listViewUpdateForState(ListViewAdapter adapter,ArrayList _arr) {
+        adapter.cleareView();
+        m_arrList = _arr;
+        for (int i = 0; i < m_arrList.size() / DATA.COLNUM; i++) {
+            String _arrnum = (String) m_arrList.get(DATA.COLNUM * i+DATA.ARRNUM);
+            String tag = (String) m_arrList.get(DATA.COLNUM * i+DATA.TAG);
+            String id = (String) m_arrList.get(DATA.COLNUM * i+DATA.ID);
+            String ip = (String) m_arrList.get(DATA.COLNUM * i + DATA.IP);
+            String pw = (String) m_arrList.get(DATA.COLNUM * i + DATA.PASSWORD);
+            String port = (String) m_arrList.get(DATA.COLNUM * i + DATA.PORT);
+            String state = (String) m_arrList.get(DATA.COLNUM * i + DATA.STATE);
+            String retVal = (String) m_arrList.get(DATA.COLNUM * i + DATA.RETVALUE);
+            String keyword = (String) m_arrList.get(DATA.COLNUM * i + DATA.KEYWORD);
+            String backGroundInterval = (String) m_arrList.get(DATA.COLNUM * i + DATA.BACKGROUND_INTERVAL);
+            String backGroundOnOff = (String) m_arrList.get(DATA.COLNUM * i + DATA.BACKGROUND_ONFF);
+            m_adapter.addItem(_arrnum, tag, id, ip, pw, port, state, retVal, keyword,backGroundInterval,backGroundOnOff);
+            m_dbHelper.updateState(Integer.parseInt(_arrnum),state);
+        }
 
+    }
 
 
     public void listViewUpdate(ListViewAdapter adapter,ArrayList _arr) {
@@ -229,27 +256,29 @@ public class MyListView  {//extends Fragment {
             String state = (String) m_arrList.get(DATA.COLNUM * i + DATA.STATE);
             String retVal = (String) m_arrList.get(DATA.COLNUM * i + DATA.RETVALUE);
             String keyword = (String) m_arrList.get(DATA.COLNUM * i + DATA.KEYWORD);
-
-            adapter.addItem(_arrnum,tag,id, ip, pw,port,state,retVal,keyword);
+            String backGroundInterval = (String) m_arrList.get(DATA.COLNUM * i + DATA.BACKGROUND_INTERVAL);
+            String backGroundOnOff = (String) m_arrList.get(DATA.COLNUM * i + DATA.BACKGROUND_ONFF);
+            m_adapter.addItem(_arrnum, tag, id, ip, pw, port, state, retVal, keyword,backGroundInterval,backGroundOnOff);
         }
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void listViewUpdateOnBackGrond(ListViewAdapter adapter,ArrayList _arr) {
+        adapter.cleareView();
+        m_arrList = _arr;
+        for (int i = 0; i < m_arrList.size() / DATA.COLNUM; i++) {
+            String _arrnum = (String) m_arrList.get(DATA.COLNUM * i + DATA.ARRNUM);
+            String tag = (String) m_arrList.get(DATA.COLNUM * i + DATA.TAG);
+            String id = (String) m_arrList.get(DATA.COLNUM * i + DATA.ID);
+            String ip = (String) m_arrList.get(DATA.COLNUM * i + DATA.IP);
+            String pw = (String) m_arrList.get(DATA.COLNUM * i + DATA.PASSWORD);
+            String port = (String) m_arrList.get(DATA.COLNUM * i + DATA.PORT);
+            String state = (String) m_arrList.get(DATA.COLNUM * i + DATA.STATE);
+            String retVal = (String) m_arrList.get(DATA.COLNUM * i + DATA.RETVALUE);
+            String keyword = (String) m_arrList.get(DATA.COLNUM * i + DATA.KEYWORD);
+            String backGroundInterval = (String) m_arrList.get(DATA.COLNUM * i + DATA.BACKGROUND_INTERVAL);
+            String backGroundOnOff = (String) m_arrList.get(DATA.COLNUM * i + DATA.BACKGROUND_ONFF);
+            m_adapter.addItem(_arrnum, tag, id, ip, pw, port, state, retVal, keyword, backGroundInterval, backGroundOnOff);
+            m_dbHelper.update(Integer.parseInt(_arrnum), tag, id, ip, port, pw, keyword, state, retVal, backGroundInterval, backGroundOnOff);
+        }
+    }
 
 }

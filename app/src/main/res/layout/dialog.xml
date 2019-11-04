@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:text="TAG :"
+                android:text="태그 :"
 
                 android:layout_height="match_parent"
                 android:gravity="end|center_vertical"
@@ -29,11 +29,11 @@
 
             <EditText
                 android:id="@+id/tag"
-                android:hint="Input tag"
-                android:inputType="text"
-
                 android:layout_height="match_parent"
-                />
+                android:hint="태그를 입력하세요"
+
+                android:inputType="text"
+                android:textSize="12sp" />
 
         </TableRow>
 
@@ -53,13 +53,13 @@
 
             <EditText
                 android:id="@+id/ip"
-                android:hint="Input host address"
+                android:layout_height="match_parent"
+                android:hint="ip 주소를 입력하세요"
+
+
                 android:inputType="text"
 
-
-                android:layout_height="match_parent"
-
-                />
+                android:textSize="12sp" />
 
         </TableRow>
 
@@ -70,7 +70,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:text="Port :"
+                android:text="포트 :"
 
                 android:layout_height="match_parent"
                 android:gravity="end|center_vertical"
@@ -79,12 +79,12 @@
 
             <EditText
                 android:id="@+id/port"
-                android:hint="Input ssh port"
+                android:layout_height="match_parent"
+                android:hint="포트를 입력하세요"
+
                 android:inputType="text"
 
-                android:layout_height="match_parent"
-
-                />
+                android:textSize="12sp" />
 
         </TableRow>
 
@@ -95,7 +95,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:text="ID :"
+                android:text="아이디 :"
 
                 android:layout_height="match_parent"
                 android:gravity="end|center_vertical"
@@ -104,11 +104,11 @@
 
             <EditText
                 android:id="@+id/userName"
-                android:hint="Input user name"
-                android:inputType="text"
-
                 android:layout_height="match_parent"
-                />
+                android:hint="아이디를 입력하세요"
+
+                android:inputType="text"
+                android:textSize="12sp" />
 
         </TableRow>
 
@@ -120,7 +120,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:text="Password : "
+                android:text="비밀번호 : "
 
 
                 android:layout_height="match_parent"
@@ -129,13 +129,13 @@
 
             <EditText
                 android:id="@+id/password"
-                android:hint="Input password"
+                android:layout_height="match_parent"
+                android:hint="비밀번호를 입력하세요"
+
                 android:inputType="textPassword"
 
-                android:layout_height="match_parent"
 
-
-                />
+                android:textSize="12sp" />
 
         </TableRow>
 
@@ -146,7 +146,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:text="Keyword : "
+                android:text="키워드 : "
 
                 android:layout_height="match_parent"
                 android:gravity="end|center_vertical"
@@ -155,16 +155,16 @@
 
             <EditText
                 android:id="@+id/keyword"
-                android:hint="Input password"
-                android:inputType="text"
-                android:scrollHorizontally="false"
-                android:ems="8"
-
-
                 android:layout_height="match_parent"
+                android:ems="8"
+                android:hint="키워드를 입력하세요"
+                android:inputType="text"
 
 
-                />
+                android:scrollHorizontally="false"
+
+
+                android:textSize="12sp" />
         </TableRow>
 
         <TableRow
@@ -206,8 +206,67 @@
             </HorizontalScrollView>
 
         </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
 
 
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+
+            >
+            <TextView
+                android:text="백그라운드 실행 : "
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                />
+            <ToggleButton
+                android:id="@+id/button_backGround_Exe_toggle"
+                android:textOn="ON"
+                android:textOff="OFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_height="match_parent"
+
+                android:layout_weight="6"
+                android:gravity="end|center_vertical"
+
+                android:text="실행주기 : " />
+
+            <EditText
+                android:id="@+id/backGroundInterval"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:duplicateParentState="false"
+                android:hint="백그라운드 실행 주기"
+                android:inputType="text"
+                android:scrollHorizontally="false"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_height="match_parent"
+
+                android:layout_weight="8"
+                android:gravity="start|center_vertical"
+
+                android:text="분"
+                android:textSize="18sp" />
+        </TableRow>
         <!--
         <TableRow android:gravity="center_horizontal">
 

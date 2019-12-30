@@ -1,6 +1,11 @@
 package com.example.a190510_gcglist;
 
 import android.app.Dialog;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.content.Intent;
+import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 //import android.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +19,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +29,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
+import androidx.work.State;
+import androidx.work.WorkContinuation;
 import androidx.work.WorkManager;
+import androidx.work.WorkStatus;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -35,12 +46,16 @@ import com.jcraft.jsch.Session;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
-public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyAlertDialogListner ,MyListView.MyListViewListner {
-    public static Context context;
-
+public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyAlertDialogListner ,MyListView.MyListViewListner,SettingsDialog.settingsDialogListener,Sender.SenderListener {
+    UUID bgId = null;
+    boolean bgOn = false;
+    long mLastClickTime=0;
+    public Context context;
     final int DIALOG_TYPE_ADD = 1;
     final int DIALOG_TYPE_SHOW = 2;
     WorkManager wm ;//= WorkManager.getInstance();
@@ -67,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
     ListViewAdapter adapter;
     /**<< List View**/
     /**memory ListView >> **/
-    static ArrayList<String> arrList;
+    static ArrayList<String>    arrList;
     /**<< memory ListView**/
 
 
@@ -79,27 +94,137 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
 
     /******************************
         TEST IP ADDRESS
-     cfamr.iptime.org
+     cfarm.iptime.org
      8001
      gcg
      rala
      ps -ef | grep "GCGManager" | grep -v 'grep' | awk '{print $8}'
     ******************************/
+    public void updateListView(){
+        adapter.notifyDataSetChanged();
+        mlv.listViewUpdate(adapter,arrList);
+    }
+
+    public void onFinishedSettingsDialog(Bundle args){
+        boolean allBgExe = args.getBoolean("allBgExe");
+        boolean allBgExeOnOff = args.getBoolean("allBgExeOnOff");
+        int isAllBgExeOnOff = args.getInt("isAllBgExeOnOff");
+//        String _strAllBgExeOnOff = allBgExeOnOff ? "t" : "f";
+
+        if ( isAllBgExeOnOff == 1){
+            for(int i=0; i<arrList.size() / DATA.COLNUM ;i++) {
+                arrList.set(DATA.COLNUM * i + DATA.BACKGROUND_ONFF, "t");
+            }
+            dbhelper.updateAllBgOnOff("t");
+        }else if( isAllBgExeOnOff == -1){
+            for(int i=0; i<arrList.size() / DATA.COLNUM ;i++) {
+                arrList.set(DATA.COLNUM * i + DATA.BACKGROUND_ONFF, "f");
+            }
+            dbhelper.updateAllBgOnOff("f");
+        }else {/* Do nothing */}
+        if(allBgExe){ //true 면 실행
+//            if(!bgOn) {//백그라운드가 기존에 실행 중이지 않으면 실행
+            if(bgId != null){ //어플 처음 실행시, 백그라운드 id 전혀 없을 때
+                WorkManager.getInstance().cancelWorkById(bgId);
+            }
+            exeBackground();
+            dbhelper.updateBackgroundID(bgId);
+            Toast.makeText(this, "지금부터 주기마다 실행됩니다", Toast.LENGTH_LONG).show();
+//          wm.getStatusesByTag("background_Check_GCG");
+
+//            }
+//            else { // 이미 실행 중
+//                Toast.makeText(this, "백그라운드가 이미 실행 중", Toast.LENGTH_LONG).show();
+//            }
+
+
+        }else{ //백그라운드 실행 종료
+//            if(bgOn)
+//                WorkManager.getInstance().cancelWorkById(bgId);
+//                WorkManager.getInstance().cancelAllWorkByTag("background_Check_GCG");
+            if(bgId != null){
+                WorkManager.getInstance().cancelWorkById(bgId);
+            }
+            Toast.makeText(this, "백그라운드 중지", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
+
+
+    private boolean isWorkScheduled(String tag) {
+        WorkManager instance = WorkManager.getInstance();
+        LiveData<List<WorkStatus>> statuses = instance.getStatusesByTag(tag);
+        if (statuses.getValue() == null) return false;
+        boolean running = false;
+        for (WorkStatus workStatus : statuses.getValue()) {
+            running = workStatus.getState() == State.RUNNING | workStatus.getState() == State.ENQUEUED;
+        }
+        return running;
+    }
+
+
+
+
+
+
+
+
+
     public void exeBackground(){
-        Toast.makeText(this, "백그라운드 토글 버튼 터치", Toast.LENGTH_LONG).show();
-//        new MyService();
-//        WorkManager wm = WorkManager.getInstance();
-//        wm.enqueue(new OneTimeWorkRequest.Builder(MyService.class).build());
+
+//        Toast.makeText(this, "백그라운드 실행", Toast.LENGTH_LONG).show();
 
         wm = WorkManager.getInstance();
-        wm.enqueue(new PeriodicWorkRequest.Builder(
-                MyService.class,5, TimeUnit.SECONDS
-        )
-                .build());
+//        Constraints constraints = new Constraints.Builder()
+//                .setRequiresCharging(true)
+//                .setRequiredNetworkType()
+//                .build();
+//
 
-        adapter.notifyDataSetChanged();
-        mlv.listViewUpdateForState(adapter,arrList);
+        Log.i("Noti"," Called exeBackGround - MainActivity ");
+        if(isWorkScheduled("background_Check_GCG")) {
 
+            Log.i("Noti"," already exe BackGround - MainActivity ");
+            return;
+        }
+
+
+        PeriodicWorkRequest mRequest = new PeriodicWorkRequest.Builder(
+            MyService.class, 15, TimeUnit.MINUTES
+            )
+                .addTag("background_Check_GCG")
+                .build();
+
+
+        bgId = mRequest.getId();
+        bgOn = true;
+//        OneTimeWorkRequest mR = new OneTimeWorkRequest.Builder(
+//                MyService.class
+//        ).build();
+        wm.enqueue(mRequest);
+
+//        wm.beginUniqueWork("bgCheckGCG", ExistingWorkPolicy.REPLACE,mR).enqueue();
+
+                wm.getStatusById(mRequest.getId()).observe(this, new Observer<WorkStatus>() {
+//                wm.getStatusById(mR.getId()).observe(this, new Observer<WorkStatus>() {
+                    @Override
+                    public void onChanged(@Nullable WorkStatus workStatus) {
+                        if (workStatus != null) {
+                            if (State.SUCCEEDED == workStatus.getState()) {
+                                Log.i("Noti", "Background Status SUCCEEDED");
+//                        adapter.notifyDataSetChanged();
+//                        mlv.listViewUpdateForState(adapter, arrList);
+                            }
+                            else if(State.CANCELLED == workStatus.getState()){
+                                Log.i("Noti", "Background Status CANCELLED");
+                            }
+                            else {/*Null*/}
+                        }
+                        else { /*workStatus == Null*/}
+                    }
+                });
 
     }
     public void onFinishDialogDoModify(int _position,String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _state,String  _backGroundInterval ,String _backGroundOnOff){
@@ -172,6 +297,12 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         context = this;
+//        Log.d("TAG_TEST","로그테스트");
+//        Intent intent = new Intent(getApplicationContext(), Sender.class);
+//        startActivity(intent);
+
+
+
 //        onCreateDialog(DATA.MY_DIALOG);
         super.onCreate(savedInstanceState);
 
@@ -182,6 +313,8 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+//        Intent intent = new Intent(this, MyService.class);
+//        startActivity(intent);
 
         ///test>>
 //            if(savedInstanceState==null){
@@ -202,6 +335,15 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
         if(arrList.isEmpty()){
             //LIST EMPTY OR DB READ ERROR
         }
+        String uuidStr =dbhelper.getBgID();
+        if( !uuidStr.equals("-1")) {
+            bgId = UUID.fromString(uuidStr);
+        }
+        else{
+
+        }
+
+
         /**List View >>**/
         mlv = new MyListView( (ListView)findViewById(R.id.listview1) ,adapter, dbhelper , getApplicationContext(),arrList,this );
 
@@ -221,7 +363,9 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
         fab_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                new Sender(adapter, mlv).sendProcessTask();
+                Sender sender = new Sender(adapter, mlv,this);
+                sender.sendProcessTask();
+//                new Sender(adapter, mlv,this).sendProcessTask();
 
 //                Toast.makeText(getApplicationContext(), "전송", Toast.LENGTH_LONG).show();
 //                for(int i=0;i<arrList.size()/DATA.COLNUM;i++) {
@@ -315,6 +459,13 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        final long MIN_CLICK_INTERVAL = 600;
+        long currentClickTime= SystemClock.uptimeMillis();
+        long elapsedTime=currentClickTime-mLastClickTime;
+        mLastClickTime=currentClickTime;
+        if(elapsedTime<=MIN_CLICK_INTERVAL){
+            return false;
+        }
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -328,7 +479,9 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
             return true;
         }
         if (id == R.id.action_settings) {
-            Toast.makeText(getApplicationContext(), "settings ", Toast.LENGTH_LONG).show();
+           // Toast.makeText(getApplicationContext(), "settings ", Toast.LENGTH_LONG).show();
+
+            showDialogForSettings();
             return true;
         }
 
@@ -418,6 +571,38 @@ public class MainActivity extends AppCompatActivity implements MyAlertDialog.MyA
         MyAlertDialog newFragment = MyAlertDialog.newInstance(_position,DIALOG_TYPE_SHOW,_tag, _userName, _password, _ip, _port, _keyword,_returnValue,_backGroundInterval,_backGroundOnOff);
         newFragment.show(ft, "dialog");
     }
+
+    void showDialogForSettings(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("settingsDialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        int SETTINGS_DIALOG_TYPE_DEFAULT = 1;
+        int numOfLists = arrList.size() / DATA.COLNUM;
+        int numOfOn = dbhelper.isAllBgExeOnOff();
+        int isAllBgExe ;
+        if( numOfOn == numOfLists){
+            isAllBgExe = 1;
+        }
+        else if(numOfOn == 0 ){
+            isAllBgExe = -1;
+        }
+        else isAllBgExe = 0;
+
+        SettingsDialog newFragment = SettingsDialog.newInstance(SETTINGS_DIALOG_TYPE_DEFAULT,isAllBgExe);
+        newFragment.show(ft, "settingsDialog");
+    }
+
+
+
+
+
+
+
 
 
 }

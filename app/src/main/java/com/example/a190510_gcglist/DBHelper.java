@@ -11,9 +11,12 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DBTABLENAME = "GCGS123";
+
+    public static final String SYSTEM_DBTABLENAME = "GCGS_SYSTEM_DB";
     private DBHelper helper;
     private SQLiteDatabase m_db;
 
@@ -40,9 +43,48 @@ public class DBHelper extends SQLiteOpenHelper {
                 +"backGroundInterval TEXT,"
                 +"backGroundOnOff TEXT)"
                 ;
+
+
+        String table_system = "CREATE TABLE IF NOT EXISTS "+SYSTEM_DBTABLENAME
+                +" (_arrnum INTEGER PRIMARY KEY AUTOINCREMENT,"
+                +"BACKGROUND_ID TEXT)"
+                ;
+
+
+
+
         m_db.execSQL(table);
+        m_db.execSQL(table_system);
 
     }
+
+    public int updateBackgroundID(UUID _bgID){
+
+        String bgIDStr = UUID.randomUUID().toString();
+        m_db =getWritableDatabase();
+
+        try {
+            //m_db.execSQL("UPDATE " + SYSTEM_DBTABLENAME + " SET = BACKGROUND_ID'" + bgIDStr + "'"+";");// + " WHERE _arrnum=" + position + ";");
+//            m_db.execSQL("REPLACE INTO " + SYSTEM_DBTABLENAME + " SET _arrnum = " + "1" + ";");// + " WHERE _arrnum=" + position + ";");
+//            m_db.execSQL("REPLACE " + SYSTEM_DBTABLENAME + " SET = BACKGROUND_ID'" + bgIDStr + "'"+";");// + " WHERE _arrnum=" + position + ";");
+
+            ContentValues cv  = new ContentValues();
+            cv.put("_arrnum",1) ;
+            m_db.replace(SYSTEM_DBTABLENAME , "_arrnum", cv );
+            cv.put("BACKGROUND_ID",bgIDStr) ;
+            m_db.replace(SYSTEM_DBTABLENAME , "BACKGROUND_ID", cv );
+
+
+        }catch (RuntimeException e ){
+            m_db.close();
+            return -2;
+        }
+
+        m_db.close();
+        return 0;
+
+    }
+
     public void onUpgrade(SQLiteDatabase db, int oldVersion,int newVersion){
         db.execSQL("DROP TABLE IF EXISTS "+ DBTABLENAME ) ;
         onCreate(db);
@@ -83,6 +125,19 @@ public class DBHelper extends SQLiteOpenHelper {
             return -1;
         }
     }
+    public int updateAllBgOnOff(String _onOff){
+        m_db =getWritableDatabase();
+//      m_db.execSQL("UPDATE " + DBTABLENAME + " SET backGroundOnOff='" + _onOff + "'" + " WHERE _arrnum=" + position + ";");
+
+        try {
+            m_db.execSQL("UPDATE " + DBTABLENAME + " SET backGroundOnOff='" + _onOff + "'" + ";");
+        }catch (RuntimeException e ){
+            m_db.close();
+            return -1;
+        }
+        m_db.close();
+        return 0;
+    }
     public int update(int position,String tag,String id,String ip, String port,String pw,String keyword,String _state,String _retVal,String _backGroundInterval,String _backGroundOnOff) {
 
         m_db =getWritableDatabase();
@@ -118,7 +173,26 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    public int isAllBgExeOnOff(){ //t 있으면 true
+        int ret=-1;
+        m_db=getWritableDatabase();
+        String countQuery="SELECT * FROM "+DBTABLENAME+" WHERE backGroundOnOff="+"'t'";
+        Cursor cursor=m_db.rawQuery(countQuery,null );
+//        Cursor cursor = m_db.query(true, DBTABLENAME,new String[]{"_arrnum","id","ip","port"},
+//                "_arrnum"+"="+arrnum,null,null,null,null,null);
 
+        if(cursor != null){
+
+            cursor.moveToFirst();
+            ret = cursor.getCount();
+
+        }
+
+        cursor.close();
+        m_db.close();
+
+        return ret;
+    }
     public int select(int arrnum,int col) throws SQLException{
         int ret=-1;
         m_db=getWritableDatabase();
@@ -196,6 +270,37 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         //m_db.close();
         return lists;
+    }
+
+
+    public String getBgID(){
+        String uuidStr="-1";
+        m_db= getWritableDatabase();
+        String selectQuery = "SELECT * FROM "+ SYSTEM_DBTABLENAME;
+        Cursor cursor = m_db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    uuidStr=cursor.getString(cursor.getColumnIndex("BACKGROUND_ID"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch(java.lang.NullPointerException e){
+            e.printStackTrace();
+            return uuidStr;
+        }
+        finally{
+            cursor.close();
+            m_db.close();
+        }
+
+
+
+
+
+
+        return uuidStr;
+
     }
 
 

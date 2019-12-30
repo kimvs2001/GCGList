@@ -8,23 +8,41 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import androidx.work.Worker;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.xml.transform.Result;
 
 public class MyService extends Worker {
     ListViewAdapter adapter;
     MyListView mlv;
+    Context m_mainActivity;
     int cnt = 0;
     public MyService() {
+//        m_mainActivity = _context;//(MainActivity)this.getApplicationContext();
+       // Intent i = getIntent();
+       // Service s = s.startService()
     }
 
     @NonNull
     @Override
     public WorkerResult doWork() {
-        new Sender(adapter,mlv).sendProcessForBackGroundTask();
-        sendNotification("kjh","보냈습니다"+cnt++);
+        Log.i("Noti"," Called doWork ");
+        m_mainActivity = getApplicationContext();
+//        new Sender(adapter,mlv,(MainActivity)this.getApplicationContext()).sendProcessTaskForBackGround();
+        new Sender(adapter,mlv,m_mainActivity).sendProcessTaskForBackGround();
+        //sendNotification("kjh", "보냈습니다");
+
+
+
+
+
+
         return WorkerResult.SUCCESS;
     }
 

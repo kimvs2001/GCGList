@@ -58,7 +58,6 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
 
 
 
-
     String tmp_tag;// = m_arrList.get(DATA.COLNUM * position + DATA.TAG);
     String tmp_id;//= m_arrList.get(DATA.COLNUM * position + DATA.ID);
     String tmp_ip;//= m_arrList.get(DATA.COLNUM * position + DATA.IP);
@@ -73,7 +72,7 @@ public class MyAlertDialog extends DialogFragment  {//implements View.OnClickLis
         void onFinishDialogDoAdd(String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _backGroundOnOff);
         void onFinishDialogDoDelete(int _position);
         void onFinishDialogDoModify(int _position,String _tag,String _userName,String _password,String _ip,String _port,String _keyword,String _state,String backGroundInterval,String _backGroundOnOff);
-        void exeBackground();
+//        void exeBackground();
     }
 
     public MyAlertDialog(){
@@ -128,6 +127,7 @@ public static MyAlertDialog newInstance(int _position,int _type,String _tag,Stri
     }
     @Nullable
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.setCancelable(true);// 191107 test
         super.onViewCreated(view,savedInstanceState);
         tagEditText = (EditText) view.findViewById(R.id.tag);
         userNameEditText = (EditText) view.findViewById(R.id.userName);
@@ -240,7 +240,9 @@ public static MyAlertDialog newInstance(int _position,int _type,String _tag,Stri
         modifyDataButton.setVisibility(View.GONE);
         deleteDataButton.setVisibility(View.GONE);
 
-//
+        intervalEditText.setText("15");
+        intervalEditText.setEnabled(false);
+
 //        bgExeButton.setOnClickListener(new View.OnClickListener(){
 //            public void onClick(View view){
 //                MyAlertDialogListner listnerInMainActivity = (MyAlertDialogListner)getActivity();
@@ -297,6 +299,7 @@ public static MyAlertDialog newInstance(int _position,int _type,String _tag,Stri
 
 
 
+
             }
         });
 
@@ -305,7 +308,7 @@ public static MyAlertDialog newInstance(int _position,int _type,String _tag,Stri
     }
 
 //    protected void onPrepareShowDialog(int id, Dialog dialog, String host_tag, String host_id, String host_ip, String host_pw, String host_port, String keyword, String tmp_retVal, ArrayList<String> _arrList) {
-    void onPrepareShowDialog(int _position,String host_tag, String host_id, String host_ip, String host_pw, String host_port, String keyword, String tmp_retVal,String _backGroundInterval,String _backGroundOnOff){//, ArrayList<String> _arrList,MainActivity _mainActivity) {
+    void onPrepareShowDialog(int _position,String host_tag, String host_id, String host_pw,String host_ip, String host_port, String keyword, String tmp_retVal,String _backGroundInterval,String _backGroundOnOff){//, ArrayList<String> _arrList,MainActivity _mainActivity) {
 
 //        m_arrList = _arrList;
 //        super.onPrepareDialog(id, dialog);
@@ -328,6 +331,9 @@ public static MyAlertDialog newInstance(int _position,int _type,String _tag,Stri
         deleteDataButton.setVisibility(View.VISIBLE);
         saveDataButton.setVisibility(View.GONE);
 
+
+        intervalEditText.setText("15");
+        intervalEditText.setEnabled(false);
 
         boolean bgExeButtonSetValue = _backGroundOnOff.equals("t") ;
         bgExeButton.setChecked(bgExeButtonSetValue);
@@ -366,13 +372,15 @@ public static MyAlertDialog newInstance(int _position,int _type,String _tag,Stri
         });
         bgExeButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
-                MyAlertDialogListner listnerInMainActivity = (MyAlertDialogListner)getActivity();
-                listnerInMainActivity.exeBackground();
+//                MyAlertDialogListner listnerInMainActivity = (MyAlertDialogListner)getActivity();
+//                listnerInMainActivity.exeBackground();
             }
         });
 
 
    }
+
+
 
 //    public void show() {
 //        m_alertDialog.show();

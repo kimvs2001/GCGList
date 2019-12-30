@@ -65,9 +65,11 @@ public class MyListView {//extends Fragment {
 
         }
         initView();
-        m_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//        m_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        m_listview.setOnItemClickListener(new OnItemSingleClickListener(){
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSingleClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int position = i;
                 ListViewItem listItem = (ListViewItem) m_listview.getItemAtPosition(position);
 //            Toast.makeText(getApplicationContext(), "ArrNum : "+arrList.get(DATA.COLNUM * position+DATA.ARRNUM), Toast.LENGTH_LONG).show();

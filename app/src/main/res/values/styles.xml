@@ -51,6 +51,10 @@
     <style name="sendTheme" parent="AppTheme">
         <item name="colorControlHighlight">@color/vividPurple</item>
     </style>
+    <style name="okayTheme" parent="AppTheme">
+        <item name="colorControlHighlight">@color/vividSky</item>
+    </style>
+
 
 
 

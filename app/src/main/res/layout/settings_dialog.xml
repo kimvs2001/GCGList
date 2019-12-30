@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TableLayout
+        android:id="@+id/dialog_settings_table"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+        >
+
+            <TextView
+                android:id="@+id/tv_allBgExe_onoff"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="fill_horizontal|center_vertical"
+
+                android:text="백그라운드 알림 전체 : " />
+
+            <RadioGroup
+                android:id="@+id/radio_bg_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_Off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settingsDialog_RadioBtn_Off" />
+
+                <RadioButton
+                    android:id="@+id/radio_Neutral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/settingsDialog_RadioBtn_Neutral" />
+
+                <RadioButton
+                    android:id="@+id/radio_On"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settingsDialog_RadioBtn_On" />
+            </RadioGroup>
+
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_allBgExe"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
+                android:text="백그라운드 실행 : "
+
+                />
+
+            <ToggleButton
+                android:id="@+id/button_allBackGround_Exe_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="중지"
+                android:textOn="실행" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+
+        </TableRow>
+    </TableLayout>
+
+
+
+
+
+    <Button
+        android:id="@+id/button_cancel_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="취소"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+
+
+        android:theme="@style/cancleTheme"
+        app:layout_constraintEnd_toStartOf="@id/button_ok_settings"
+        app:layout_constraintTop_toBottomOf="@id/dialog_settings_table" />
+    <Button
+        android:id="@+id/button_ok_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_horizontal"
+        android:text="확인"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:theme="@style/okayTheme"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_settings_table" />
+
+
+</android.support.constraint.ConstraintLayout>
